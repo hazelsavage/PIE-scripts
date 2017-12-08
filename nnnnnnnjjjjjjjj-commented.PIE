@@ -1,0 +1,98 @@
+﻿//A first prototype/sketch script for playing a
+//probably-never-created 'Temple Run' -style
+//game map in Minecraft, while standing on a
+// Playstation1/Playstation2 dance pad/mat.
+
+//Stand with your left foot on the 'X' button,
+//and your right foot on the 'Circle' button.
+
+//(That's probably not very comfortable.
+//later interations of this control system used
+//'X' and 'Up')
+
+//(c) Copyright H J Savage, June 2013
+
+
+
+//----------WALKING-----------//
+
+//set player walking forwards
+press (Key.W)   //only works if your 'go forward'
+                //key is set as 'W', obviously.
+
+
+//--------TURNING LEFT AND RIGHT-------//
+
+
+//--------TURNING LEFT-------//
+
+//resetting the counter variable for left
+if var.i == 10 and ((not Joystick1.Button3) or (JoyStick1.Button3 and Joystick1.Button2)) then
+   var.i = 0
+end if
+
+
+//if left foot only then turn character left through 90 degrees while button held down
+if (var.initialise = true) and (Joystick1.Button3) and (not Joystick1.Button2) then
+   var.jumping = false
+   while var.i < 10
+         var.i++
+         mouse.DirectInputX = (mouse.DirectInputX - 24)
+         debug = "Turning Left " + var.i
+         //wait 0ms
+   end while
+end if
+
+
+//--------TURNING RIGHT-------//
+
+//resetting the counter variable for right
+if var.j == 10 and ((not Joystick1.Button2) or (JoyStick1.Button2 and Joystick1.Button3)) then
+   var.j = 0
+end if
+
+
+
+//if right foot only then turn character right through 90 degrees while button held down
+if (var.initialise = true) and (not Joystick1.Button3) and (Joystick1.Button2) then
+   var.jumping = false
+   while var.j < 10
+         mouse.DirectInputX = (mouse.DirectInputX + 24)
+         var.j++
+         debug = "Turning Right " + var.j
+         //wait 0ms
+   end while
+end if
+
+
+//------------STANDING STILL-------------//
+
+//standing with Left foot on Playstation_X and Right foot on Playstation_Circle
+if (Joystick1.Button3) and (Joystick1.Button2) then
+   var.jumping = false
+   var.initialise = true
+   debug = "Both Feet"
+   //press (Key.N)      //I think this bit is to do e.g. digging
+   //wait 100ms         //if you change the 'left mouse button' action
+   //release (Key.N)    //to be the 'N' key.
+end if
+
+
+//-------------JUMPING IN THE AIR ------------//
+
+//lifting both feet off of X and Circle at the same time
+//(i.e. jumping in the air)
+if var.jumping = false and (not Joystick1.Button3) and (not Joystick1.Button2) then
+   debug = "Neither Foot (Jumping)"
+   var.jumping = true
+   press (Key.space)
+   wait 100ms
+   release (Key.space)
+end if
+
+
+
+
+
+
+
