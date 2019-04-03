@@ -1,0 +1,66 @@
+﻿wiimote.Leds = 4;
+
+
+if wiimote.dot1vis = true then
+DebugPrint("dot1  " + "size: " + wiimote.dot1size + "  intensity: " + wiimote.dot1intensity + "  pos: " + wiimote.dot1x + ", " + wiimote.dot1y)
+endif
+
+if wiimote.dot2vis = true then
+DebugPrint("dot2  " + "size: " + wiimote.dot2size + "  intensity: " + wiimote.dot2intensity + "  pos: " + wiimote.dot2x + ", " + wiimote.dot2y)
+endif
+
+if wiimote.dot3vis = true then
+DebugPrint("dot3  " + "size: " + wiimote.dot3size + "  intensity: " + wiimote.dot3intensity + "  pos: " + wiimote.dot3x + ", " + wiimote.dot3y)
+endif
+
+if wiimote.dot4vis = true then
+DebugPrint("dot4  " + "size: " + wiimote.dot4size + "  intensity: " + wiimote.dot4intensity + "  pos: " + wiimote.dot4x + ", " + wiimote.dot4y)
+endif
+
+midi.Volume = 100%;
+midi.Instrument = 10;
+
+if wiimote.dot1vis = true then
+      if wiimote.dot1size >=  0 && wiimote.dot1size <  1 then
+      midi.f4Velocity = 100%;
+      wait 200ms;
+      midi.f4Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 1 && wiimote.dot1size <  2 then
+      midi.g4Velocity = 100%;
+      wait 200ms;
+      midi.g4Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 2 && wiimote.dot1size <  3 then
+      midi.a5Velocity = 100%;
+      wait 200ms;
+      midi.a5Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 3 && wiimote.dot1size <  4 then
+      midi.b5Velocity = 100%;
+      wait 200ms;
+      midi.b5Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 4 && wiimote.dot1size <  5 then
+      midi.c5Velocity = 100%;
+      wait 200ms;
+      midi.c5Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 5 && wiimote.dot1size <  6 then
+      midi.d5Velocity = 100%;
+      wait 200ms;
+      midi.d5Velocity = 0%;
+      wait 200ms;
+      endif
+      if wiimote.dot1size >= 6
+      midi.e5Velocity = 100%;
+      wait 200ms;
+      midi.e5Velocity = 0%;
+      wait 200ms;
+      endif
+endif

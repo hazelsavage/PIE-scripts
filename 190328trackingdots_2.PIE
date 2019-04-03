@@ -1,0 +1,273 @@
+﻿midi.DeviceOut = 0;
+midi.Volume = 100%;
+
+var.waitTime = 2000ms;
+
+
+
+if var.noteVel = null && var.noteVelSet = false then
+  var.noteVel = 30%;
+  var.noteVelSet = true;
+endif
+
+var.sensLog = ("dot1 size: " + wiimote1.dot1size + "  intensity: " + wiimote1.dot1intensity + "  xPos: " + wiimote1.dot1x);
+var.sensLog1 = ("dot1 size: " + wiimote1.dot1size);
+var.sensLog2 = ("dot1 intensity: " + wiimote1.dot1intensity);
+var.sensLog3 = ("dot1 xPos: " + wiimote1.dot1x);
+//DebugPrint(var.sensLog);
+
+
+
+if var.setIns = null then
+  var.setIns = 1;
+  midi.instrument = var.setIns;
+  debug = ("Instrument #" + var.setIns);
+endif
+
+
+if var.pitchVal = null then
+  var.pitchVal = 50%;
+  midi.pitchWheel = var.pitchVal;
+endif
+
+
+//a variable for switching from dot size, to intensity, to position
+//mode 1 = dotSize, mode 2 = dotIntensity, mode 3 = dotPosition (for X)
+
+if var.mode = null && var.modeMsg = false then
+  debug = ("Currently in Mode 0: no sound played");
+  var.modeMsg = true;
+endif
+
+
+if released(key.Zero) then
+  var.mode = 0;
+  debug = ("Changed to Mode 0: no sound played");
+else if released(key.one) then
+  var.mode = 1;
+  debug = ("Changed to Mode 1: dot size");
+else if released(key.two) then
+  var.mode = 2;
+    debug = ("Changed to Mode 2: dot intensity");
+else if released(key.three) then
+  var.mode = 3;
+    debug = ("Changed to Mode 3: dot position (x-axis) ");
+endif
+
+
+//changing the midi instrument using the wiimote1 Up/Down
+
+
+if released(wiimote1.Plus) then
+  if var.setIns = 128 then
+    var.setIns = 1;
+  else
+    var.setIns = var.setIns + 1;
+  endif
+  midi.Instrument = var.setIns;
+  debug = ("Instrument changed to #" + var.setIns);
+endif
+
+if released(wiimote1.Minus) then
+  if var.setIns = 1 then
+    var.setIns = 128;
+  else
+    var.setIns = var.setIns - 1;
+  endif
+  midi.Instrument = var.setIns;
+  debug = ("Instrument changed to #" + var.setIns);
+endif
+
+
+if (wiimote1.up) then
+  if var.pitchVal > 90% then
+    debug = ("PitchWheel already at 100%");
+  elseif var.pitchVal <= 90% then
+    var.pitchVal = var.pitchVal + 10%;
+    midi.PitchWheel = var.pitchVal;
+    debug = ("PitchWheel changed to " + var.pitchVal);
+    wait 100ms
+  endif
+endif
+if (wiimote1.down) then
+  if var.pitchVal < 10% then
+    debug = ("PitchWheel already at 0%");
+  elseif var.pitchVal >= 10% then
+    var.pitchVal = var.pitchVal - 10%;
+    midi.PitchWheel = var.pitchVal;
+    debug = ("PitchWheel changed to " + var.pitchVal);
+    wait 100ms
+  endif
+endif
+
+if released(wiimote1.right) then
+  if var.noteVel > 90% then
+    debug = ("Note Velocity already at 100%");
+  elseif var.noteVel <= 90% then
+    var.noteVel = var.noteVel + 10%;
+    debug = ("Note Velocity changed to " + var.noteVel);
+  endif
+endif
+if released(wiimote1.left) then
+  if var.noteVel < 10% then
+    debug = ("NoteVelocity already at 0%: notes will not sound");
+  elseif var.noteVel >= 10% then
+    var.noteVel = var.noteVel - 10%;
+    if var.noteVel = 0 then
+      debug = ("Note Velocity changed to 0%: notes will not sound")
+    else
+      debug = ("Note Velocity changed to " + var.noteVel);
+    endif
+  endif
+endif
+
+
+//dotSize mode
+if var.mode = 1 then
+   if wiimote1.dot1vis = true then
+      if wiimote1.dot1size >=  1 && wiimote1.dot1size <  2 then
+        DebugPrint(var.sensLog1);
+        midi.f4Velocity = var.noteVel;
+        DebugPrint("note f4 played");
+        wait var.waitTime;
+        midi.f4Velocity = 0;
+      endif
+      if wiimote1.dot1size >= 2 && wiimote1.dot1size <  3 then
+        DebugPrint(var.sensLog1);
+        midi.g4Velocity = var.noteVel;
+        DebugPrint("note g4 played");
+        wait var.waitTime;
+        midi.g4Velocity = 0;
+      endif
+      if wiimote1.dot1size >= 3 && wiimote1.dot1size <  4 then
+        DebugPrint(var.sensLog1);
+        midi.a5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note a5 played");
+        midi.a5Velocity = 0;
+      endif
+      if wiimote1.dot1size >= 4 && wiimote1.dot1size <  5 then
+        DebugPrint(var.sensLog1);
+        midi.b5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note b5 played");
+        midi.b5Velocity = 0;
+      endif
+      if wiimote1.dot1size >= 5 && wiimote1.dot1size <  6 then
+        DebugPrint(var.sensLog1);
+        midi.c5Velocity = var.noteVel;
+        DebugPrint("note c5 played");
+        wait var.waitTime;
+        midi.c5Velocity = 0;
+      endif
+      if wiimote.dot1size >= 6 then
+        DebugPrint(var.sensLog1);
+        midi.d5Velocity = var.noteVel;
+        DebugPrint("note d5 played");
+        wait var.waitTime;
+        midi.d5Velocity = 0;
+      endif
+   wait 10ms
+   endif
+endif
+
+
+//dot intensity mode
+if var.mode = 2 then
+   if wiimote1.dot1vis = true then
+      if wiimote1.dot1intensity >=  1 && wiimote1.dot1intensity <  25 then
+        DebugPrint(var.sensLog2);
+        midi.f4Velocity = var.noteVel;
+        DebugPrint("note f4 played");
+        wait var.waitTime;
+        midi.f4Velocity = 0;
+      endif
+      if wiimote1.dot1intensity >= 25 && wiimote1.dot1intensity <  50 then
+        DebugPrint(var.sensLog2);
+        midi.g4Velocity = var.noteVel;
+        DebugPrint("note g4 played");
+        wait var.waitTime;
+        midi.g4Velocity = 0;
+      endif
+      if wiimote1.dot1intensity >= 50 && wiimote1.dot1intensity <  75 then
+        DebugPrint(var.sensLog2);
+        midi.a5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note a5 played");
+        midi.a5Velocity = 0;
+      endif
+      if wiimote1.dot1intensity >= 75 && wiimote1.dot1intensity <  100 then
+        DebugPrint(var.sensLog2);
+        midi.b5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note b5 played");
+        midi.b5Velocity = 0;
+      endif
+      if wiimote1.dot1intensity >= 100 && wiimote1.dot1intensity <  125 then
+        DebugPrint(var.sensLog2);
+        midi.c5Velocity = var.noteVel;
+        DebugPrint("note c5 played");
+        wait var.waitTime;
+        midi.c5Velocity = 0;
+      endif
+      if wiimote.dot1intensity >= 125 then
+        DebugPrint(var.sensLog2);
+        midi.d5Velocity = var.noteVel;
+        DebugPrint("note d5 played");
+        wait var.waitTime;
+        midi.d5Velocity = 0;
+      endif
+   wait 10ms
+   endif
+endif
+
+
+//xPosition mode
+if var.mode = 3 then
+   if wiimote1.dot1vis = true then
+      if wiimote1.dot1x >=  0 && wiimote1.dot1x <  200 then
+        DebugPrint(var.sensLog3);
+        midi.f4Velocity = var.noteVel;
+        DebugPrint("note f4 played");
+        wait var.waitTime;
+        midi.f4Velocity = 0;
+      endif
+      if wiimote1.dot1x >= 200 && wiimote1.dot1x <  400 then
+        DebugPrint(var.sensLog3);
+        midi.g4Velocity = var.noteVel;
+        DebugPrint("note g4 played");
+        wait var.waitTime;
+        midi.g4Velocity = 0;
+      endif
+      if wiimote1.dot1x >= 400 && wiimote1.dot1x <  600 then
+        DebugPrint(var.sensLog3);
+        midi.a5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note a5 played");
+        midi.a5Velocity = 0;
+      endif
+      if wiimote1.dot1x >= 600 && wiimote1.dot1x <  800 then
+        DebugPrint(var.sensLog3);
+        midi.b5Velocity = var.noteVel;
+        wait var.waitTime;
+        DebugPrint("note b5 played");
+        midi.b5Velocity = 0;
+      endif
+      if wiimote1.dot1x >= 800 && wiimote1.dot1x <  1000 then
+        DebugPrint(var.sensLog3);
+        midi.c5Velocity = var.noteVel;
+        DebugPrint("note c5 played");
+        wait var.waitTime;
+        midi.c5Velocity = 0;
+      endif
+      if wiimote.dot1x >= 1000 then
+        DebugPrint(var.sensLog3);
+        midi.d5Velocity = var.noteVel;
+        DebugPrint("note d5 played");
+        wait var.waitTime;
+        midi.d5Velocity = 0;
+      endif
+   wait 10ms
+   endif
+endif
+
